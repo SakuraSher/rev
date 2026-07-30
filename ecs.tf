@@ -36,8 +36,10 @@ resource "aws_ecs_task_definition" "ecs_task" {
         
 
       } 
+      }
     }
     
+     ])
 
     
     execution_role_arn = aws_iam_role.execution_role.arn
