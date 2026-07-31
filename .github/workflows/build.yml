@@ -18,7 +18,7 @@ jobs:
   buildcode:
     runs-on: ubuntu-latest
     env:
-      path: rev/src/
+      path: src/
     steps:
       - name: checkout
         uses: actions/checkout@v4
