@@ -1,1 +1,28 @@
-#adding to githuns
+#adding to github
+name: build-ecs
+
+on:
+  push:
+    branches: ["main"]
+env:
+    REGION: ap-south
+  
+jobs:
+  
+  buildcode:
+    runs-on: ubuntu-latest
+    env:
+      path: /src/
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: install buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Configure AWS crecdentials
+        uses: aws_actions/configure-aws-crendentials
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+      - name: build docker image
+        uses: docker
