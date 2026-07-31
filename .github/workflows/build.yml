@@ -2,27 +2,41 @@
 name: build-ecs
 
 on:
-  push:
-    branches: ["main"]
+  # push:
+  #   branches: ["main"]
+  workflow_dispatch:
+
 env:
-    REGION: ap-south
+    REGION: ap-south-1
+    ECR_REPO: 167251111434.dkr.ecr.ap-south-1.amazonaws.com/bootcamp/day8
+    ACCOUNT_ID: "167251111434"
+    ECR_TAG: ${{github.sha}}
+
   
 jobs:
   
   buildcode:
     runs-on: ubuntu-latest
     env:
-      path: /src/
+      path: rev/src/
     steps:
       - name: checkout
         uses: actions/checkout@v4
       - name: install buildx
         uses: docker/setup-buildx-action@v3
       - name: Configure AWS crecdentials
-        uses: aws_actions/configure-aws-crendentials
+        uses: aws-actions/configure-aws-crendentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
+          aws-region: ${{ env.REGION }}
+      - name: ecr login
+        uses: aws-actions/aws-ecr-login@v2
+
       - name: build docker image
-        uses: docker
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          platforms: linux/amd64
+          tags: ${{ env.ACCOUNT_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com/${{ env.ECR_REPO }}:${{ github.sha }}
