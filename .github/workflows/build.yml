@@ -33,10 +33,10 @@ jobs:
       - name: ecr login
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: build docker image
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          push: true
-          platforms: linux/amd64
-          tags: ${{ env.ACCOUNT_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com/${{ env.ECR_REPO }}:${{ github.sha }}
+      - name: Build image
+        run: |
+          cd ${{ env.path }}
+         
+          docker buildx build --platform linux/amd64 --push -t ${{ env.ECR_REPO }}:${{ env.ECR_TAG }} -t ${{ env.ECR_REPO }}:latest .
+          
+         
