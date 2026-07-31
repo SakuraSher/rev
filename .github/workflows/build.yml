@@ -35,7 +35,7 @@ jobs:
 
       - name: Build image
         run: |
-          echo pwd
+          pwd
           cd ${{ env.path }}
           docker buildx build --platform linux/amd64 --push -t ${{ env.ECR_REPO }}:${{ env.ECR_TAG }} -t ${{ env.ECR_REPO }}:latest .
           
