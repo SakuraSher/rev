@@ -34,6 +34,10 @@ jobs:
              with:
                  terraform_version: ${{ env.terraform_version }}
                  command: init
+           - name: Init Terraform 
+             uses: hashicorp/setup-terraform@v2
+             with:
+                 run: terraform init
            - name: Terraform Plan
              if: ${{ github.event.inputs.selection == 'plan' }}
              working-directory: ${{ env.path }}
