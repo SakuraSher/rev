@@ -1,0 +1,21 @@
+name: build Infra
+
+on:
+    workflow_dispatch:
+env:
+    PATH: /ver2/infra
+jobs:
+    buildInfra:
+        runs-on: ubuntu-latest
+        steps:
+            - name: checkout code
+              uses: actions/checkout@v6
+            
+            - name: install terraform
+              uses: hashicorp/setup-terraform@v3
+            - name: aws credentials
+              uses: aws_actions/configure-aws-credentials@v4
+              with:
+                AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
+                AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+                REGION: 

@@ -6,9 +6,9 @@ from flask import abort
 from flask_login import current_user
 from sqlalchemy import func
 
-from ver1.src.app import db
-from ver1.src.app.models.models import Team, TeamMember, Ticket, User
-from ver1.src.app.routes.helpers import unique_username_from_email, validate_email, validate_password
+from app import db
+from app.models.models import Team, TeamMember, Ticket, User
+from app.routes.helpers import unique_username_from_email, validate_email, validate_password
 
 
 def normalize_project_key(value):

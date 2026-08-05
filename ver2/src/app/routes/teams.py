@@ -1,10 +1,10 @@
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 
-from ver1.src.app import db
-from ver1.src.app.models.models import Team, TeamMember, User
-from ver1.src.app.routes.helpers import full_account_required, validate_email, validate_password
-from ver1.src.app.routes.team_helpers import (
+from app import db
+from app.models.models import Team, TeamMember, User
+from app.routes.helpers import full_account_required, validate_email, validate_password
+from app.routes.team_helpers import (
     is_team_owner,
     normalize_project_key,
     parse_bulk_member_rows,
@@ -83,7 +83,7 @@ def create_team():
 @teams_bp.route("/<int:team_id>")
 @login_required
 def view_team(team_id):
-    from ver1.src.app.routes.team_helpers import get_team_for_user, team_member_users
+    from app.routes.team_helpers import get_team_for_user, team_member_users
 
     team = get_team_for_user(team_id)
     members = (
@@ -106,7 +106,7 @@ def view_team(team_id):
 @teams_bp.route("/<int:team_id>/members", methods=["POST"])
 @login_required
 def add_member(team_id):
-    from ver1.src.app.routes.team_helpers import get_team_for_user
+    from app.routes.team_helpers import get_team_for_user
 
     team = get_team_for_user(team_id)
     if not is_team_owner(team.id):
@@ -155,7 +155,7 @@ def add_member(team_id):
 @teams_bp.route("/<int:team_id>/members/bulk", methods=["POST"])
 @login_required
 def bulk_add_members(team_id):
-    from ver1.src.app.routes.team_helpers import get_team_for_user
+    from app.routes.team_helpers import get_team_for_user
 
     team = get_team_for_user(team_id)
     if not is_team_owner(team.id):
@@ -210,7 +210,7 @@ def bulk_add_members(team_id):
 @teams_bp.route("/<int:team_id>/members/<int:user_id>/remove", methods=["POST"])
 @login_required
 def remove_member(team_id, user_id):
-    from ver1.src.app.routes.team_helpers import get_team_for_user
+    from app.routes.team_helpers import get_team_for_user
 
     team = get_team_for_user(team_id)
     if not is_team_owner(team.id):
