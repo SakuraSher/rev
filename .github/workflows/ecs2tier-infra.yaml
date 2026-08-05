@@ -49,5 +49,5 @@ jobs:
            - name: Terraform Destroy
              if: ${{ github.event.inputs.selection == 'destroy' }}
              working-directory: ${{ env.path }}
-             run: terraform destroy
+             run: terraform destroy -lock-timeout=60s  --auto-approve
             
