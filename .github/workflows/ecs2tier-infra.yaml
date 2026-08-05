@@ -33,7 +33,6 @@ jobs:
              uses: hashicorp/setup-terraform@v2
              with:
                  terraform_version: ${{ env.terraform_version }}
-                 command: init
            - name: Init Terraform 
              uses: hashicorp/setup-terraform@v2
              with:
