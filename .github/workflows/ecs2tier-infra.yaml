@@ -41,11 +41,11 @@ jobs:
            - name: Terraform Plan
              if: ${{ github.event.inputs.selection == 'plan' }}
              working-directory: ${{ env.path }}
-             run: terraform plan
+             run: terraform plan -lock-timeout=60s
            - name: Terraform Apply
              if: ${{ github.event.inputs.selection == 'apply' }}
              working-directory: ${{ env.path }}
-             run: terraform apply --auto-approve
+             run: terraform apply -lock-timeout=60s  --auto-approve
            - name: Terraform Destroy
              if: ${{ github.event.inputs.selection == 'destroy' }}
              working-directory: ${{ env.path }}
