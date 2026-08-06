@@ -4,7 +4,7 @@ on:
 env:
     ECR_REPOSITORY: "167251111434.dkr.ecr.ap-south-1.amazonaws.com/bootcamp/day8"
     IMAGE_TAG: ${{github.sha}}
-    path: "/ver2/infra"
+    path: "ver2/infra"
 jobs:
     update-ecs-task:
         runs-on: ubuntu-latest
