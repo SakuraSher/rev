@@ -4,7 +4,7 @@ on:
 env:
     ECR_REPOSITORY: "167251111434.dkr.ecr.ap-south-1.amazonaws.com/bootcamp/day8"
     IMAGE_TAG: ${{github.sha}}
-    path: "ver2/src"
+    path: "testver/src" #must be changed
 jobs:
     update-ecs-task:
         runs-on: ubuntu-latest
@@ -28,3 +28,10 @@ jobs:
                 docker build -t ${{env.ECR_REPOSITORY}}:${{env.IMAGE_TAG}} -t ${{env.ECR_REPOSITORY}}:latest . 
                 docker push ${{env.ECR_REPOSITORY}}:${{env.IMAGE_TAG}} 
                 docker push ${{env.ECR_REPOSITORY}}:latest 
+            - name: Update ECS task definition
+              uses: aws-actions/amazon-ecs-render-task-definition@v1
+              id: render-task-def
+              with:
+                task-definition: ver2/src/ecs-task-def.json
+                container-name: 2tier
+                image: ${{ env.ECR_REPOSITORY }}:${{ github.sha }}
