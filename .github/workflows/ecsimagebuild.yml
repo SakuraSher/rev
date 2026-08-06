@@ -1,0 +1,27 @@
+name: Update ECS task and Serive
+on:
+    workflow_dispatch:
+env:
+    ECR_REPOSITORY: "167251111434.dkr.ecr.ap-south-1.amazonaws.com/bootcamp/day8"
+    IMAGE_TAG: ${{github.sha}}
+    path: "/ver2/infra"
+jobs:
+    update-ecs-task:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+            - name: Configure AWS credentials
+              uses: aws-actions/configure-aws-credentials@v3
+              with:
+                aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                aws-region: ap-south-1
+
+            - name: ECR login
+              uses: aws-actions/amazon-ecr-login@v2
+              id: ecr-login
+            - name: build and push Docker image
+              run: |
+                docker build -t ${{env.ECR_REPOSITORY}}:${{env.IMAGE_TAG}} . 
+                docker push ${{env.ECR_REPOSITORY}}:${{env.IMAGE_TAG}}
