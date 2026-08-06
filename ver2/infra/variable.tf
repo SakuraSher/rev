@@ -36,5 +36,5 @@ variable "rds_subnet_cidr2" {
 variable "image_name" {
     description = "Name of the application"
     type        = string
-    default     = "167251111434.dkr.ecr.ap-south-1.amazonaws.com/bootcamp/day8:v1.0"
+    default     = "167251111434.dkr.ecr.ap-south-1.amazonaws.com/bootcamp/day8:latest"
 }
