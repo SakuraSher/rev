@@ -28,10 +28,18 @@ jobs:
                 docker build -t ${{env.ECR_REPOSITORY}}:${{env.IMAGE_TAG}} -t ${{env.ECR_REPOSITORY}}:latest . 
                 docker push ${{env.ECR_REPOSITORY}}:${{env.IMAGE_TAG}} 
                 docker push ${{env.ECR_REPOSITORY}}:latest 
+            - name: download task deinition
+              run: |
+                cd ${{env.path}}
+                aws ecs describe-task-definition --task-definition ecstasker \
+                --query taskDefinition \
+                | jq 'del(.taskDefinitionArn, .revision, .status, .requiresAttributes, .compatibilities, .registeredAt, .registeredBy)' \
+                 > task-def.json
+                cat task-def.json
             - name: Update ECS task definition
               uses: aws-actions/amazon-ecs-render-task-definition@v1
               id: render-task-def
               with:
-                task-definition: ver2/src/ecs-task-def.json
+                task-definition: testver/src/task-def.json
                 container-name: 2tier
                 image: ${{ env.ECR_REPOSITORY }}:${{ github.sha }}
