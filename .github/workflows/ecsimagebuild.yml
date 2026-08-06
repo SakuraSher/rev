@@ -1,4 +1,4 @@
-name: Update ECS task and Serive
+name: Update ECS task and Service
 on:
     workflow_dispatch:
 env:
@@ -23,5 +23,7 @@ jobs:
               id: ecr-login
             - name: build and push Docker image
               run: |
+                cd ${{env.path}}
+                pwd
                 docker build -t ${{env.ECR_REPOSITORY}}:${{env.IMAGE_TAG}} . 
                 docker push ${{env.ECR_REPOSITORY}}:${{env.IMAGE_TAG}}
