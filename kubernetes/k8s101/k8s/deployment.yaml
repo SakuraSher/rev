@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-2tierapp
+  labels:
+    app: flask
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: flask
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: flask
+    spec:
+      imagePullSecrets:
+      - name: ecr-secret
+      containers:
+      - name: flask
+      # use a private image
+        image: 167251111434.dkr.ecr.ap-south-1.amazonaws.com/bootcamp/day8:v2.0
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8000
+        env:
+        - name: DB_LINK
+          value: "postgresql://postgres:password1234!@mydb.co5r4e0btxhj.ap-south-1.rds.amazonaws.com:5432/mydb"
+          # valueFrom:
+          #   secretKeyRef:
+          #     name: db-secret
+          #     key: DB_LINK
+
+        # - name: APP_VERSION
+        #   valueFrom:
+        #     configMapKeyRef:
+        #       name: app-config
+        #       key: APP_VERSION
+
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-2tierapp
+spec:
+  selector:
+    app: flask
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8000
