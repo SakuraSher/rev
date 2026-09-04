@@ -15,12 +15,14 @@ env:
   IMAGE_TAG: ${{ github.sha }}
   path: kubernetes/3-tier-app
 
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
   build-backend:
     runs-on: ubuntu-latest
-    permissions:
-        contents: read
-        id-token: write 
+    
     steps:
       - name: checkout
         uses: actions/checkout@v4
