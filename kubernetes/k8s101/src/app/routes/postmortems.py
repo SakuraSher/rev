@@ -3,8 +3,8 @@ from datetime import datetime
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 
-from app import db
-from app.models.models import (
+from k8s101.src.app import db
+from k8s101.src.app.models.models import (
     INCIDENT_STATUSES,
     POSTMORTEM_STATUSES,
     Incident,
@@ -12,9 +12,9 @@ from app.models.models import (
     PostmortemActionItem,
     Ticket,
 )
-from app.routes.helpers import full_account_required
-from app.routes.incident_helpers import get_incident_for_user, log_incident_event
-from app.routes.team_helpers import (
+from k8s101.src.app.routes.helpers import full_account_required
+from k8s101.src.app.routes.incident_helpers import get_incident_for_user, log_incident_event
+from k8s101.src.app.routes.team_helpers import (
     next_ticket_number,
     team_member_users,
     user_teams,
@@ -31,7 +31,7 @@ def require_full_account():
 
 
 def _accessible_postmortems():
-    from app.routes.incident_helpers import accessible_incidents_query
+    from k8s101.src.app.routes.incident_helpers import accessible_incidents_query
 
     incident_ids = accessible_incidents_query().with_entities(Incident.id)
     return Postmortem.query.filter(Postmortem.incident_id.in_(incident_ids))

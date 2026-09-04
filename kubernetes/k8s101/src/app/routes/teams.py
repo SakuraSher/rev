@@ -1,10 +1,10 @@
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 
-from app import db
-from app.models.models import Team, TeamMember, User
-from app.routes.helpers import full_account_required, validate_email, validate_password
-from app.routes.team_helpers import (
+from k8s101.src.app import db
+from k8s101.src.app.models.models import Team, TeamMember, User
+from k8s101.src.app.routes.helpers import full_account_required, validate_email, validate_password
+from k8s101.src.app.routes.team_helpers import (
     is_team_owner,
     normalize_project_key,
     parse_bulk_member_rows,
@@ -88,8 +88,8 @@ def create_team():
 @teams_bp.route("/<int:team_id>")
 @login_required
 def view_team(team_id):
-    from app.routes.team_helpers import get_team_for_user, team_member_users
-    from app.routes.incident_helpers import current_on_call
+    from k8s101.src.app.routes.team_helpers import get_team_for_user, team_member_users
+    from k8s101.src.app.routes.incident_helpers import current_on_call
 
     team = get_team_for_user(team_id)
     members = (
@@ -114,7 +114,7 @@ def view_team(team_id):
 @teams_bp.route("/<int:team_id>/members", methods=["POST"])
 @login_required
 def add_member(team_id):
-    from app.routes.team_helpers import get_team_for_user
+    from k8s101.src.app.routes.team_helpers import get_team_for_user
 
     team = get_team_for_user(team_id)
     if not is_team_owner(team.id):
@@ -161,7 +161,7 @@ def add_member(team_id):
 @teams_bp.route("/<int:team_id>/members/bulk", methods=["POST"])
 @login_required
 def bulk_add_members(team_id):
-    from app.routes.team_helpers import get_team_for_user
+    from k8s101.src.app.routes.team_helpers import get_team_for_user
 
     team = get_team_for_user(team_id)
     if not is_team_owner(team.id):
@@ -216,7 +216,7 @@ def bulk_add_members(team_id):
 @teams_bp.route("/<int:team_id>/members/<int:user_id>/remove", methods=["POST"])
 @login_required
 def remove_member(team_id, user_id):
-    from app.routes.team_helpers import get_team_for_user
+    from k8s101.src.app.routes.team_helpers import get_team_for_user
 
     team = get_team_for_user(team_id)
     if not is_team_owner(team.id):

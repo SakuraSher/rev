@@ -4,8 +4,8 @@ from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 from sqlalchemy import func, or_
 
-from app import db
-from app.models.models import (
+from k8s101.src.app import db
+from k8s101.src.app.models.models import (
     INCIDENT_EVENT_TYPES,
     INCIDENT_SEVERITIES,
     INCIDENT_STATUSES,
@@ -13,22 +13,22 @@ from app.models.models import (
     Incident,
     Ticket,
 )
-from app.routes.helpers import full_account_required
-from app.routes.incident_helpers import (
+from k8s101.src.app.routes.helpers import full_account_required
+from k8s101.src.app.routes.incident_helpers import (
     accessible_incidents_query,
     current_on_call,
     get_incident_for_user,
     log_incident_event,
     next_incident_number,
 )
-from app.routes.team_helpers import (
+from k8s101.src.app.routes.team_helpers import (
     get_team_for_user,
     next_ticket_number,
     team_member_users,
     user_teams,
     validate_assignee_for_team,
 )
-from app.query_options import incident_list_options
+from k8s101.src.app.query_options import incident_list_options
 
 incidents_bp = Blueprint("incidents", __name__, url_prefix="/incidents")
 

@@ -6,8 +6,8 @@ from flask import Blueprint, jsonify, render_template, request
 from flask_login import current_user, login_required
 from sqlalchemy import desc, func
 
-from app import db
-from app.games_data import (
+from k8s101.src.app import db
+from k8s101.src.app.games_data import (
     ACHIEVEMENTS,
     DEPLOY_SCENARIOS,
     DOCKERFILE_CHALLENGES,
@@ -20,7 +20,7 @@ from app.games_data import (
     PIPELINE_STAGES,
     SLUG_TO_GAME_TYPE,
 )
-from app.models.models import GameScore, PlayerAchievement, PlayerProfile
+from k8s101.src.app.models.models import GameScore, PlayerAchievement, PlayerProfile
 
 games_bp = Blueprint("games", __name__, url_prefix="/games")
 

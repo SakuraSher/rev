@@ -5,7 +5,7 @@ from flask import Blueprint, flash, jsonify, redirect, render_template, request,
 from flask_login import current_user, login_required, login_user
 from sqlalchemy.orm import joinedload
 
-from app.models.models import (
+from k8s101.src.app.models.models import (
     RETRO_CATEGORIES,
     Retro,
     RetroCard,
@@ -15,7 +15,7 @@ from app.models.models import (
     User,
     db,
 )
-from app.routes.helpers import (
+from k8s101.src.app.routes.helpers import (
     admin_required,
     new_share_token,
     safe_next_url,
