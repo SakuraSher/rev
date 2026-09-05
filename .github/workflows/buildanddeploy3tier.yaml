@@ -49,7 +49,7 @@ jobs:
           run: |
              pwd
              ls -ltr
-             cd ${{env.Path}}/src/${{matrix.service.name}}
+             cd kubernetes/3-tier-appsrc/${{matrix.service.name}}
              pwd
              ls -ltr
              docker buildx build --platform linux/amd64 --push \ 
