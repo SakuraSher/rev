@@ -45,10 +45,12 @@ jobs:
             aws-region: ${{env.REGION}}
         - name: ecr login
           uses: aws-actions/amazon-ecr-login@v2
-        - name: Build and push image
-          working-directory: ${{env.Path}}/src/${{matrix.service.name}}
+        - name: Build and push image ${{matrix.service.name}}
           run: |
-           docker buildx build --platform linux/amd64 --push \
+             cd ${{env.Path}}/src/${{matrix.service.name}}
+             pwd
+             ls -ltr
+             docker buildx build --platform linux/amd64 --push \ 
              -t ${{env.ACCOUNT_ID}}.dkr.ecr.${{env.REGION}}.amazonaws.com/${{matrix.service.name}}:${{env.IMAGE_TAG}} \
              -t ${{env.ACCOUNT_ID}}.drk.ecr.${{env.REGION}}.amazonaws.com/${{matrix.service.name}}:latest . 
 
