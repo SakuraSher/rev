@@ -10,8 +10,8 @@ on:
 env:
   REGION: ap-south-1
   ACCOUNT_ID: "167251111434"
-  BACKEND_REPO: augk8s26-backend
-  FRONTEND_REPO: augk8s26-frontend
+  BACKEND_REPO: backend
+  FRONTEND_REPO: frontend
   IMAGE_TAG: ${{ github.sha }}
   path: kubernetes/3-tier-app
 
