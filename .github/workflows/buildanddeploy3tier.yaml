@@ -49,8 +49,8 @@ jobs:
           run: |
              cd kubernetes/3-tier-app/src/${{matrix.service.name}}
              docker buildx build --platform linux/amd64 --push \ 
-             -t ${{env.ACCOUNT_ID}}.dkr.ecr.${{env.REGION}}.amazonaws.com/${{matrix.service.repo}}:${{env.IMAGE_TAG}} \
-             -t ${{env.ACCOUNT_ID}}.dkr.ecr.${{env.REGION}}.amazonaws.com/${{matrix.service.repo}}:latest . 
+             -t 167251111434.dkr.ecr.ap-south-1.amazonaws.com/${{matrix.service.repo}}:${{env.IMAGE_TAG}} \
+             -t 167251111434.dkr.ecr.ap-south-1.amazonaws.com/${{matrix.service.repo}}:latest . 
 
 
 
