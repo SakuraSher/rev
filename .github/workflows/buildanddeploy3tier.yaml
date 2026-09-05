@@ -19,73 +19,110 @@ permissions:
   contents: read
   id-token: write
 
+
 jobs:
-  build-backend:
+ 
+  build-service:
+    strategy:
+      matrix:
+         service:
+          - name: "frontend"
+            repo: "augk8s26-frontend"
+          - name: "backend"
+            repo: "augk8s26-backend" 
     runs-on: ubuntu-latest
     
     steps:
-      - name: checkout
-        uses: actions/checkout@v4
-      - name: install buildx
-        uses: docker/setup-buildx-action@v3
-      - name: Debug OIDC token claims
-        run: |
-         curl -sS -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
-         "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=sts.amazonaws.com" | \
-         jq -r '.value' | cut -d. -f2 | base64 -d 2>/dev/null | jq .
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with: 
+        - name: checkout
+          uses: actions/checkout@v4
+      
+        - name: install buildx
+          uses: docker/setup-buildx-action@v3
+        - name: Configure AWS credentials
+          uses: aws-actions/configure-aws-credentails@v4
+          with:
             role-to-assume: arn:aws:iam::167251111434:role/githubactionrole
-        #   aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        #   aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            aws-region: ${{ env.REGION }}
-      - name: ecr login
-        uses: aws-actions/amazon-ecr-login@v2
-      - name: Build and push backend image
-        working-directory: ${{ env.path }}/src/backend
-        run: |
-          docker buildx build --platform linux/amd64 --push \
-            -t ${{ env.ACCOUNT_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com/${{ env.BACKEND_REPO }}:${{ env.IMAGE_TAG }} \
-            -t ${{ env.ACCOUNT_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com/${{ env.BACKEND_REPO }}:latest .
+            aws-region: ${{env.REGION}}
+        - name: ecr login
+          uses: aws-actions/amazon-ecr-login@v2
+        - name: Build and push image
+          working-directory: ${{env.Path}}/src/${{matrix.service}}
+          run: |
+           docker buildx build --platform linux/amd64 --push \
+             -t ${{env.ACOOUNT_ID}}.dkr.ecr.${{env.REGION}}.amazonaws.com/${{matrix.service}}:${{env.IMAGE_TAG}} \
+             -t ${{env.ACCOUNT_ID}}.drk.ecr.${{env.REGION}}.amazonaws.com/${{matrix.service}}:latest . 
 
-  build-frontend:
-    runs-on: ubuntu-latest
-    steps:
-      - name: checkout
-        uses: actions/checkout@v4
-      - name: install buildx
-        uses: docker/setup-buildx-action@v3
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-            role-to-assume: arn:aws:iam::167251111434:role/githubactionrole
-        #   aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        #   aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            aws-region: ${{ env.REGION }}
-      - name: ecr login
-        uses: aws-actions/amazon-ecr-login@v2
-      - name: Build and push frontend image
-        working-directory: ${{ env.path }}/src/frontend
-        run: |
-          docker buildx build --platform linux/amd64 --push \
-            -t ${{ env.ACCOUNT_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com/${{ env.FRONTEND_REPO }}:${{ env.IMAGE_TAG }} \
-            -t ${{ env.ACCOUNT_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com/${{ env.FRONTEND_REPO }}:latest .
 
-#   update-manifests:
-#     needs: [build-backend, build-frontend]
+
+
+
+
+
+
+
+
+#       - name: checkout
+#         uses: actions/checkout@v4
+#       - name: install buildx
+#         uses: docker/setup-buildx-action@v3
+#       # - name: Debug OIDC token claims
+#       #   run: |
+#       #    curl -sS -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+#       #    "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=sts.amazonaws.com" | \
+#       #    jq -r '.value' | cut -d. -f2 | base64 -d 2>/dev/null | jq .
+#       - name: Configure AWS credentials
+#         uses: aws-actions/configure-aws-credentials@v4
+#         with: 
+#             role-to-assume: arn:aws:iam::167251111434:role/githubactionrole
+#         #   aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#         #   aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#             aws-region: ${{ env.REGION }}
+#       - name: ecr login
+#         uses: aws-actions/amazon-ecr-login@v2
+#       - name: Build and push backend image
+#         working-directory: ${{ env.path }}/src/backend
+#         run: |
+#           docker buildx build --platform linux/amd64 --push \
+#             -t ${{ env.ACCOUNT_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com/${{ env.BACKEND_REPO }}:${{ env.IMAGE_TAG }} \
+#             -t ${{ env.ACCOUNT_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com/${{ env.BACKEND_REPO }}:latest .
+
+#   build-frontend:
 #     runs-on: ubuntu-latest
 #     steps:
 #       - name: checkout
 #         uses: actions/checkout@v4
-#       - name: Update image tags in k8s manifests
+#       - name: install buildx
+#         uses: docker/setup-buildx-action@v3
+#       - name: Configure AWS credentials
+#         uses: aws-actions/configure-aws-credentials@v4
+#         with:
+#             role-to-assume: arn:aws:iam::167251111434:role/githubactionrole
+#         #   aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#         #   aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#             aws-region: ${{ env.REGION }}
+#       - name: ecr login
+#         uses: aws-actions/amazon-ecr-login@v2
+#       - name: Build and push frontend image
+#         working-directory: ${{ env.path }}/src/frontend
 #         run: |
-#           sed -i "s#image: .*${{ env.BACKEND_REPO }}:.*#image: ${{ env.ACCOUNT_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com/${{ env.BACKEND_REPO }}:${{ env.IMAGE_TAG }}#" ${{ env.path }}/k8s/backend.yaml
-#           sed -i "s#image: .*${{ env.FRONTEND_REPO }}:.*#image: ${{ env.ACCOUNT_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com/${{ env.FRONTEND_REPO }}:${{ env.IMAGE_TAG }}#" ${{ env.path }}/k8s/frontend.yaml
-#       - name: Commit and push updated manifests
-#         run: |
-#           git config user.name "github-actions[bot]"
-#           git config user.email "github-actions[bot]@users.noreply.github.com"
-#           git add ${{ env.path }}/k8s/backend.yaml ${{ env.path }}/k8s/frontend.yaml
-#           git diff --cached --quiet && echo "No manifest changes to commit" || git commit -m "chore: deploy 3-tier-app images ${{ env.IMAGE_TAG }}"
-#           git push
+#           docker buildx build --platform linux/amd64 --push \
+#             -t ${{ env.ACCOUNT_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com/${{ env.FRONTEND_REPO }}:${{ env.IMAGE_TAG }} \
+#             -t ${{ env.ACCOUNT_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com/${{ env.FRONTEND_REPO }}:latest .
+
+# #   update-manifests:
+# #     needs: [build-backend, build-frontend]
+# #     runs-on: ubuntu-latest
+# #     steps:
+# #       - name: checkout
+# #         uses: actions/checkout@v4
+# #       - name: Update image tags in k8s manifests
+# #         run: |
+# #           sed -i "s#image: .*${{ env.BACKEND_REPO }}:.*#image: ${{ env.ACCOUNT_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com/${{ env.BACKEND_REPO }}:${{ env.IMAGE_TAG }}#" ${{ env.path }}/k8s/backend.yaml
+# #           sed -i "s#image: .*${{ env.FRONTEND_REPO }}:.*#image: ${{ env.ACCOUNT_ID }}.dkr.ecr.${{ env.REGION }}.amazonaws.com/${{ env.FRONTEND_REPO }}:${{ env.IMAGE_TAG }}#" ${{ env.path }}/k8s/frontend.yaml
+# #       - name: Commit and push updated manifests
+# #         run: |
+# #           git config user.name "github-actions[bot]"
+# #           git config user.email "github-actions[bot]@users.noreply.github.com"
+# #           git add ${{ env.path }}/k8s/backend.yaml ${{ env.path }}/k8s/frontend.yaml
+# #           git diff --cached --quiet && echo "No manifest changes to commit" || git commit -m "chore: deploy 3-tier-app images ${{ env.IMAGE_TAG }}"
+# #           git push

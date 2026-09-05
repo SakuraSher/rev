@@ -1,7 +1,7 @@
 variable vpc_name {
   description = "Name of the VPC to use"
   type        = string
-  default     = "asg3"
+  default     = "dev-proj-abc"
 }
 
 variable region {
