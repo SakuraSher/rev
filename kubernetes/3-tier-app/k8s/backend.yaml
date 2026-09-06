@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: backend-deployment
-  namespace: devopsdozo
+  namespace: kubernetes_namespace.metadata[0].name
   labels:
     app: backend
 spec:
@@ -17,10 +17,9 @@ spec:
     spec:
       containers:
       - name: backend
-        image: 879381241087.dkr.ecr.ap-south-1.amazonaws.com/augk8s26-backend:393993dfe44b807279810304f4bc92e174d0d67b
+        image: 8167251111434.dkr.ecr.ap-south-1.amazonaws.com/backend:latest
         ports:
         - containerPort: 8000
-
         resources:
           requests:
             memory: "256Mi"
@@ -28,70 +27,138 @@ spec:
           limits:
             memory: "512Mi"
             cpu: "500m"
+          readinessProbe:
+            httpGet: 
+              path: /health
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 20
+            periodSeconds: 15
+            timeoutSeconds: 3
+            failureThreshold: 3    
+        
 
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: 8000
-          initialDelaySeconds: 10
-          periodSeconds: 10
-          timeoutSeconds: 3
-          failureThreshold: 3
 
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 8000
-          initialDelaySeconds: 20
-          periodSeconds: 15
-          timeoutSeconds: 3
-          failureThreshold: 3
 
-        env:
-        - name: DATABASE_URL
-          valueFrom:
-            secretKeyRef:
-              name: backend-secret
-              key: DB_LINK
-        - name: SECRET_KEY
-          valueFrom:
-            secretKeyRef:
-              name: backend-secret
-              key: SECRET_KEY
 
-        - name: DB_USERNAME
-          valueFrom:
-            secretKeyRef:
-              name: backend-secret
-              key: DB_USERNAME
-        - name: DB_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: backend-secret
-              key: DB_PASSWORD
 
-        - name: ALLOWED_ORIGINS
-          valueFrom:
-            configMapKeyRef:
-              name: backend-config
-              key: ALLOWED_ORIGINS
-        - name: APP_VERSION
-          valueFrom:
-            configMapKeyRef:
-              name: backend-config
-              key: APP_VERSION
-        - name: DB_HOST
-          valueFrom:
-            configMapKeyRef:
-              name: backend-config
-              key: DB_HOST
-        - name: DB_PORT
-          valueFrom:
-            configMapKeyRef:
-              name: backend-config
-              key: DB_PORT
-        - name: DB_NAME
-          valueFrom:
-            configMapKeyRef:
-              name: backend-config
-              key: DB_NAME
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: backend-deployment
+#   namespace: devopsdozo
+#   labels:
+#     app: backend
+# spec:
+#   replicas: 2
+#   selector:
+#     matchLabels:
+#       app: backend
+#   template:
+#     metadata:
+#       labels:
+#         app: backend
+#     spec:
+#       containers:
+#       - name: backend
+#         image: 879381241087.dkr.ecr.ap-south-1.amazonaws.com/augk8s26-backend:393993dfe44b807279810304f4bc92e174d0d67b
+#         ports:
+#         - containerPort: 8000
+
+#         resources:
+#           requests:
+#             memory: "256Mi"
+#             cpu: "250m"
+#           limits:
+#             memory: "512Mi"
+#             cpu: "500m"
+
+#         readinessProbe:
+#           httpGet:
+#             path: /health
+#             port: 8000
+#           initialDelaySeconds: 10
+#           periodSeconds: 10
+#           timeoutSeconds: 3
+#           failureThreshold: 3
+
+#         livenessProbe:
+#           httpGet:
+#             path: /health
+#             port: 8000
+#           initialDelaySeconds: 20
+#           periodSeconds: 15
+#           timeoutSeconds: 3
+#           failureThreshold: 3
+
+#         env:
+#         - name: DATABASE_URL
+#           valueFrom:
+#             secretKeyRef:
+#               name: backend-secret
+#               key: DB_LINK
+#         - name: SECRET_KEY
+#           valueFrom:
+#             secretKeyRef:
+#               name: backend-secret
+#               key: SECRET_KEY
+
+#         - name: DB_USERNAME
+#           valueFrom:
+#             secretKeyRef:
+#               name: backend-secret
+#               key: DB_USERNAME
+#         - name: DB_PASSWORD
+#           valueFrom:
+#             secretKeyRef:
+#               name: backend-secret
+#               key: DB_PASSWORD
+
+#         - name: ALLOWED_ORIGINS
+#           valueFrom:
+#             configMapKeyRef:
+#               name: backend-config
+#               key: ALLOWED_ORIGINS
+#         - name: APP_VERSION
+#           valueFrom:
+#             configMapKeyRef:
+#               name: backend-config
+#               key: APP_VERSION
+#         - name: DB_HOST
+#           valueFrom:
+#             configMapKeyRef:
+#               name: backend-config
+#               key: DB_HOST
+#         - name: DB_PORT
+#           valueFrom:
+#             configMapKeyRef:
+#               name: backend-config
+#               key: DB_PORT
+#         - name: DB_NAME
+#           valueFrom:
+#             configMapKeyRef:
+#               name: backend-config
+#               key: DB_NAME

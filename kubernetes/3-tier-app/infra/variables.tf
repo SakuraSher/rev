@@ -1,7 +1,7 @@
 variable vpc_name {
   description = "Name of the VPC to use"
   type        = string
-  default     = "dev-proj-abc"
+  default     =  "asg3" #"dev-proj-abc"
 }
 
 variable region {
@@ -32,4 +32,10 @@ variable "frontend_repo" {
   description = "Name of the ECR repository for the frontend"
   type        = string
   default     = "3tier-frontend"
+}
+
+variable "namespace" {
+  description = "Kubernetes namespace to deploy resources"
+  type        = string
+  default     = "devopsnamespace"
 }
