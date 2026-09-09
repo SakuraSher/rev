@@ -11,7 +11,9 @@ on:
                 - kubernetes/3-tier-app/infra
                 - kubernetes/EKS/ekscoreinfra
                 - kubernetes/EKS/k8s-services
-        
+
+env:
+    TERRAFORM_VERSION: 1.15.8
 
 jobs:
     create-infra:
@@ -30,6 +32,8 @@ jobs:
                 aws-region: "ap-south-1"
             - name: install terraform
               uses: hashicorp/setup-terraform@v2
+              with:
+                terraform_version: ${{env.TERRAFORM_VERSION}}
             - name: Terrafom Plan
               run: |
                 cd ${{inputs.eks_repo_path}}
