@@ -29,7 +29,7 @@ jobs:
                 role-to-assume: arn:aws:iam::167251111434:oidc-provider/token.actions.githubusercontent.com
                 region: "ap-south-1"
             - name: install terraform
-              uses: hashicorp/terraform-setup@v2
+              uses: hashicorp/setup-terraform@v2
             - name: Terrafom Plan
               run: |
                 cd ${{inputs.eks_repo_path}}
