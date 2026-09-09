@@ -17,6 +17,7 @@ env:
 
 jobs:
     create-infra:
+        environment: dev
         permissions:
             id-token: write # allows to gain oidc token
             contents: read # needed for checkout to pass
@@ -37,4 +38,4 @@ jobs:
             - name: Terrafom Plan
               run: |
                 cd ${{inputs.eks_repo_path}}
-                terraform init
+                terraform plan
