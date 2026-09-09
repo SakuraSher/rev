@@ -1,0 +1,36 @@
+name: EKS Infrastructure
+on:
+    workflow_dispatch:
+        inputs:
+          region:
+            type: string
+            default: ap-south-1
+          eks_repo_path:
+            type: choice
+            options:
+                - kubernetes/3-tier-app/infra
+                - kubernetes/EKS/ekscoreinfra
+                - kubernetes/EKS/k8s-services
+        
+
+jobs:
+    create-infra:
+        permissions:
+            id-token: write # allows to gain oidc token
+            contents: read # needed for checkout to pass
+
+        runs-on: ubuntu-latest
+        steps:
+            - name: checkout code
+              uses: actions/checkout@v4
+            - name : AWS oidc login
+              uses: aws-actions/configure-aws-credentials@v4
+              with:
+                role-to-assume: arn:aws:iam::167251111434:oidc-provider/token.actions.githubusercontent.com
+                region: "ap-south-1"
+            - name: install terraform
+              uses: hashicorp/terraform-setup@v2
+            - name: Terrafom Plan
+              run: |
+                cd ${{inputs.eks_repo_path}}
+                terraform init
